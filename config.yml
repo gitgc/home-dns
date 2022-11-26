@@ -1,0 +1,25 @@
+upstream:
+  default:
+    - https://1.1.1.1/dns-query
+blocking:
+  blackLists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  clientGroupsBlock:
+    default:
+      - ads
+caching:
+  minTime: 5m
+  maxTime: 30m
+  prefetching: true
+conditional:
+  fallbackUpstream: false
+  mapping:
+    coia.io: 192.168.1.1
+    coia.me: 192.168.1.1
+    # for reverse DNS lookups of local devices
+    178.168.192.in-addr.arpa: 192.168.1.1
+    # for all unqualified hostnames
+    .: 168.168.1.1
+port: 53
+httpPort: 4000
