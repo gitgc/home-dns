@@ -23,16 +23,21 @@ conditional:
   mapping:
     coia.io: 192.168.1.1
     coia.me: 192.168.1.1
-    scrypted.coia.io: 192.168.4.170
-    home.coia.io: 192.168.4.170
-    nvr.coia.io: 192.168.4.170
-    scrypted.internal.coia.io: 192.168.1.94
-
     # for reverse DNS lookups of local devices
     178.168.192.in-addr.arpa: 192.168.1.1
     # for all unqualified hostnames
     .: 168.168.1.1
 clientLookup:
   upstream: 192.168.1.1
+  clients:
+    scrypted.coia.io: 
+      - 192.168.4.170
+    home.coia.io: 
+      - 192.168.4.170
+    nvr.coia.io: 
+      - 192.168.4.170
+    scrypted.internal.coia.io: 
+      - 192.168.1.94
+    
 port: 53
 httpPort: 4000
