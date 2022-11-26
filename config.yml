@@ -1,6 +1,6 @@
 upstream:
   default:
-    - unbound
+    - unbound:5453
 blocking:
   blackLists:
     ads:
