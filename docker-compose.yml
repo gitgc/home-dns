@@ -1,15 +1,5 @@
 services:
-  unbound:
-    image: mvance/unbound:latest
-    container_name: unbound
-    restart: unless-stopped
-    ports:
-    - "5453:53/tcp"
-    - "5453:53/udp"
-
   blocky:
-    depends_on:
-      - unbound
     image: spx01/blocky
     container_name: dns
     restart: unless-stopped
@@ -23,6 +13,8 @@ services:
       - ./config.yml:/app/config.yml
 
   blocky-frontend:
+    container_name: blocky-ui
+    restart: unless-stopped
     depends_on:
       - blocky
     image: ghcr.io/mozart409/blocky-frontend:latest

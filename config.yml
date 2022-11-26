@@ -1,6 +1,6 @@
 upstream:
   default:
-    - unbound:5453
+    - https://1.1.1.1/dns-query
 blocking:
   blackLists:
     ads:
