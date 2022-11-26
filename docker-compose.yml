@@ -13,15 +13,6 @@ services:
       - ./config.yml:/app/config.yml:ro
       - ./google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
 
-  blocky-frontend:
-    container_name: blocky-ui
-    restart: unless-stopped
-    depends_on:
-      - blocky
-    image: ghcr.io/mozart409/blocky-frontend:latest
-    ports:
-      - '81:81/tcp'
-
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
