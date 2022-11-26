@@ -10,7 +10,8 @@ services:
     environment:
       - TZ=America/Los_Angeles
     volumes:
-      - ./config.yml:/app/config.yml
+      - ./config.yml:/app/config.yml:ro
+      - ./google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
 
   blocky-frontend:
     container_name: blocky-ui
