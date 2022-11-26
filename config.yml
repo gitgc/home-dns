@@ -1,10 +1,16 @@
 upstream:
   default:
     - https://1.1.1.1/dns-query
+filtering:
+  queryTypes:
+    - AAAA
 blocking:
   blackLists:
     ads:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  whiteLists:
+    ads:
+      - google-ads-whitelist.txt
   clientGroupsBlock:
     default:
       - ads
