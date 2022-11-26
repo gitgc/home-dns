@@ -1,7 +1,6 @@
 upstream:
   default:
-    - 1.1.1.1
-    - 8.8.8.8
+    - unbound
 blocking:
   blackLists:
     ads:

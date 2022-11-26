@@ -1,9 +1,17 @@
 services:
-  dns:
+  unbound:
+    image: mvance/unbound:latest
+    container_name: unbound
+    restart: unless-stopped
+    ports:
+    - "5353:53/tcp"
+    - "5353:53/udp"
+
+  blocky:
+    depends_on:
+      - unbound
     image: spx01/blocky
-    container_name: home-dns
-    hostname: dns
-    domainname: dns.coia.me
+    container_name: dns
     restart: unless-stopped
     ports:
       - "53:53/tcp"
@@ -13,6 +21,13 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - ./config.yml:/app/config.yml
+
+  blocky-frontend:
+    depends_on:
+      - blocky
+    image: ghcr.io/mozart409/blocky-frontend:latest
+    ports:
+      - '81:81/tcp'
 
   watchtower:
     container_name: watchtower
