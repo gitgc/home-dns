@@ -23,6 +23,7 @@ customDNS:
     scrypted.coia.io: 192.168.4.170
     home.coia.io: 192.168.4.170
     nvr.coia.io: 192.168.4.170
+    auth.coia.io: 192.168.4.170
     network.coia.io: 192.168.1.1
     scrypted.internal.coia.io: 192.168.1.94
 conditional:
