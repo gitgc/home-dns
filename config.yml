@@ -15,9 +15,9 @@ blocking:
     default:
       - ads
 caching:
-  minTime: 1m
-  maxTime: 1m
-  prefetching: false
+  minTime: 5m
+  maxTime: 30m
+  prefetching: true
 customDNS:
   mapping:
     scrypted.coia.io: 192.168.4.170
