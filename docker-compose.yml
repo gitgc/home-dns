@@ -7,32 +7,6 @@ services:
     ports:
       - "9001:9001"
 
-  webserver:
-    image: ghcr.io/gitgc/home-proxy-webserver:main
-    container_name: dns-webserver
-    restart: unless-stopped
-    init: true
-    ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      - DO_AUTH_TOKEN
-      - CADDY_SUBDOMAIN
-      - CADDY_DOMAIN
-      - CADDY_HEALTH_CHECK_URI
-    volumes:
-      - "./Caddyfile:/etc/caddy/Caddyfile"
-      - "./caddy/data/:/data/"
-      - "./caddy/config/:/config/"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "${CADDY_HEALTH_CHECK_URI}" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-
   blocky:
     image: spx01/blocky
     container_name: dns
@@ -40,7 +14,7 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "4000:4000/tcp"
+#      - "4000:4000/tcp"
     environment:
       - TZ=America/Los_Angeles
     volumes:

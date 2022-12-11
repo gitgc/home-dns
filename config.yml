@@ -1,9 +1,15 @@
 upstream:
   default:
-    - https://1.1.1.1/dns-query
+    - https://dns.google/dns-query
+
+upstreamTimeout: 10s
+
+bootstrapDns: tcp+udp:8.8.8.8
+
 filtering:
   queryTypes:
     - AAAA
+
 blocking:
   blackLists:
     ads:
@@ -14,10 +20,12 @@ blocking:
   clientGroupsBlock:
     default:
       - ads
+
 caching:
   minTime: 5m
   maxTime: 30m
   prefetching: true
+
 customDNS:
   mapping:
     scrypted.coia.io: 192.168.4.170
@@ -27,6 +35,7 @@ customDNS:
     network.coia.io: 192.168.4.170
     portainer.coia.io: 192.168.4.170
     scrypted.internal.coia.io: 192.168.1.94
+
 conditional:
   fallbackUpstream: false
   mapping:
@@ -36,7 +45,9 @@ conditional:
     178.168.192.in-addr.arpa: 192.168.1.1
     # for all unqualified hostnames
     .: 168.168.1.1
+
 clientLookup:
   upstream: 192.168.1.1
+
 port: 53
 httpPort: 4000
