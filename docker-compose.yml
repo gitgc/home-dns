@@ -21,6 +21,32 @@ services:
       - ./config.yml:/app/config.yml:ro
       - ./google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
 
+  webserver:
+    image: ghcr.io/gitgc/home-proxy-webserver:main
+    container_name: dns-webserver
+    restart: unless-stopped
+    init: true
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DO_AUTH_TOKEN
+      - CADDY_SUBDOMAIN
+      - CADDY_DOMAIN
+      - CADDY_HEALTH_CHECK_URI
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile"
+      - "./caddy/data/:/data/"
+      - "./caddy/config/:/config/"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+#    healthcheck:
+#      test: [ "CMD", "wget", "--spider", "${CADDY_HEALTH_CHECK_URI}" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#      start_period: 60s
+
   watchtower:
     container_name: watchtower
     image: containrrr/watchtower
