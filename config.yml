@@ -37,7 +37,7 @@ customDNS:
     hifi.coia.io: 192.168.4.170
     scrypted.internal.coia.io: 192.168.1.94
     hifi.internal.coia.io: 192.168.1.208
-
+    home.internal.coia.io: 192.168.1.228
 conditional:
   fallbackUpstream: false
   mapping:
