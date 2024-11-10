@@ -1,8 +1,12 @@
 upstream:
   default:
-    - 192.168.6.227:5354
+    - 192.168.1.4:5354
+
+upstreamTimeout: 10s
 
 bootstrapDns: tcp+udp:8.8.8.8
+
+connectIPVersion: v4
 
 filtering:
   queryTypes:
@@ -29,6 +33,12 @@ customDNS:
     nvr.coia.io: 192.168.6.87
     scrypted.coia.io: 192.168.6.87
     ha.internal.coia.io: 192.168.1.228
+    test.coia.io: 1.2.3.4
+    unifi.coia.io: 192.168.1.1
+    dns1.coia.io: 192.168.1.4
+    cam.garden.coia.io: 192.168.3.179
+    cam-exterior.workshop.coia.io: 192.168.3.9
+    cam-exterior.garage.coia.io: 192.168.3.7
 #conditional:
 #  fallbackUpstream: false
 #  mapping:
@@ -41,11 +51,11 @@ customDNS:
 #clientLookup:
 #  upstream: 192.168.1.1
 
-ports: 
+ports:
   dns: 53
 
 log:
-  level: debug
-  format: json
+  level: warn
+  format: text
   timestamp: false
-  privacy: false
+  privacy: true
