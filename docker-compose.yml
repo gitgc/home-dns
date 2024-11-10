@@ -1,18 +1,17 @@
 services:
   unbound:
-      container_name: unbound
-      image: "mvance/unbound:latest"
+      image: mvance/unbound:1.21.1
+      container_name: dns-unbound
       ports:
       - 5354:5353/udp
       - 5354:5353/tcp
       volumes:
-        - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf
+        - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
       restart: always
 
   blocky:
     image: spx01/blocky:v0.24
-    container_name: dns
-    restart: always
+    container_name: dns-blocky
     environment:
       - TZ=America/Los_Angeles
     ports:
@@ -23,3 +22,4 @@ services:
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
     depends_on:
       - unbound
+    restart: always
