@@ -1,0 +1,51 @@
+upstream:
+  default:
+    - 192.168.6.227:5354
+
+bootstrapDns: tcp+udp:8.8.8.8
+
+filtering:
+  queryTypes:
+    - AAAA
+
+blocking:
+  denylists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  allowlists:
+    ads:
+      - google-ads-whitelist.txt
+  clientGroupsBlock:
+    default:
+      - ads
+
+caching:
+  minTime: 5m
+  maxTime: 30m
+  prefetching: true
+
+customDNS:
+  mapping:
+    nvr.coia.io: 192.168.6.87
+    scrypted.coia.io: 192.168.6.87
+    ha.internal.coia.io: 192.168.1.228
+#conditional:
+#  fallbackUpstream: false
+#  mapping:
+#    coia.io: 192.168.1.1
+    # for reverse DNS lookups of local devices
+#    178.168.192.in-addr.arpa: 192.168.1.1
+    # for all unqualified hostnames
+#    .: 168.168.1.1
+
+#clientLookup:
+#  upstream: 192.168.1.1
+
+ports: 
+  dns: 53
+
+log:
+  level: debug
+  format: json
+  timestamp: false
+  privacy: false
