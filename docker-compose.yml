@@ -1,7 +1,8 @@
 services:
   unbound:
-      image: mvance/unbound:1.21.1
+      image: pedantic/unbound:latest
       container_name: dns-unbound
+      #network_mode: host
       ports:
       - 5354:5353/udp
       - 5354:5353/tcp
@@ -12,11 +13,12 @@ services:
   blocky:
     image: spx01/blocky:v0.24
     container_name: dns-blocky
+    #network_mode: host
     environment:
       - TZ=America/Los_Angeles
     ports:
-      - 534:53/udp
-      - 534:53/tcp
+      - 53:53/udp
+      - 53:53/tcp
     volumes:
       - ./blocky/config.yml:/app/config.yml:ro
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
