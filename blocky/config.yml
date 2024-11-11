@@ -36,6 +36,7 @@ customDNS:
     test.coia.io: 1.2.3.4
     unifi.coia.io: 192.168.1.1
     dns1.coia.io: 192.168.1.4
+    dns2.coia.io: 192.168.1.170
     cam.garden.coia.io: 192.168.3.179
     cam-exterior.workshop.coia.io: 192.168.3.9
     cam-exterior.garage.coia.io: 192.168.3.7
