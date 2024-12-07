@@ -2,18 +2,22 @@ services:
   unbound:
       image: pedantic/unbound:latest
       container_name: dns-unbound
-      #network_mode: host
       ports:
       - 5354:5353/udp
       - 5354:5353/tcp
       volumes:
         - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
       restart: always
+      healthcheck:
+        test: drill cloudflare.com || exit 1
+        interval: 30s
+        timeout: 5s
+        retries: 3
+        start_period: 60s
 
   blocky:
     image: spx01/blocky:v0.24
     container_name: dns-blocky
-    #network_mode: host
     environment:
       - TZ=America/Los_Angeles
     ports:
@@ -23,5 +27,7 @@ services:
       - ./blocky/config.yml:/app/config.yml:ro
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
     depends_on:
-      - unbound
+      unbound:
+        condition: service_healthy
     restart: always
+
