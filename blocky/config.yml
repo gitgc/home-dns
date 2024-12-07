@@ -1,16 +1,22 @@
-upstream:
-  default:
-    - 192.168.1.4:5354
+upstreams:
+  init:
+    strategy: fast
+  timeout: 10s
+  groups:
+    default:
+      - 192.168.1.4:5354
 
-upstreamTimeout: 10s
-
-bootstrapDns: tcp+udp:8.8.8.8
+bootstrapDns:
+  - upstream: tcp+udp:8.8.8.8
 
 connectIPVersion: v4
 
 filtering:
   queryTypes:
     - AAAA
+
+fqdnOnly:
+  enable: true
 
 blocking:
   denylists:
@@ -22,6 +28,11 @@ blocking:
   clientGroupsBlock:
     default:
       - ads
+  loading:
+    downloads:
+      timeout: 4m
+      attempts: 5
+      cooldown: 10s
 
 caching:
   minTime: 5m
@@ -29,6 +40,8 @@ caching:
   prefetching: true
 
 customDNS:
+  customTTL: 1h
+  filterUnmappedTypes: true
   mapping:
     nvr.coia.io: 192.168.6.87
     scrypted.coia.io: 192.168.6.87
@@ -43,14 +56,15 @@ customDNS:
 #conditional:
 #  fallbackUpstream: false
 #  mapping:
-#    coia.io: 192.168.1.1
-    # for reverse DNS lookups of local devices
-#    178.168.192.in-addr.arpa: 192.168.1.1
+   # for reverse DNS lookups of local devices
+#    1.168.192.in-addr.arpa: 192.168.1.1
     # for all unqualified hostnames
-#    .: 168.168.1.1
+#    .: 192.168.1.1
+#    3.168.192.in-addr.arpa: 192.168.3.1
+#    6.168.192.in-addr.arpa: 192.168.6.1
 
-#clientLookup:
-#  upstream: 192.168.1.1
+clientLookup:
+  upstream: 192.168.1.1
 
 ports:
   dns: 53
