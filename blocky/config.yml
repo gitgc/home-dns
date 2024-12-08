@@ -46,7 +46,7 @@ customDNS:
     nvr.coia.io: 192.168.6.87
     scrypted.coia.io: 192.168.6.87
     ha.internal.coia.io: 192.168.1.228
-    test.coia.io: 1.2.3.4
+    seattle.coia.io: 192.168.1.222
     unifi.coia.io: 192.168.1.1
     dns1.coia.io: 192.168.1.4
     dns2.coia.io: 192.168.1.170
