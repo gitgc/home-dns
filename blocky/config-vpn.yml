@@ -1,0 +1,57 @@
+upstreams:
+  init:
+    strategy: fast
+  timeout: 10s
+  groups:
+    default:
+      - 8.8.8.8:53
+
+bootstrapDns:
+  - upstream: tcp+udp:8.8.8.8
+
+connectIPVersion: v4
+
+filtering:
+  queryTypes:
+    - AAAA
+
+fqdnOnly:
+  enable: true
+
+blocking:
+  denylists:
+    ads:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+  allowlists:
+    ads:
+      - google-ads-whitelist.txt
+  clientGroupsBlock:
+    default:
+      - ads
+  loading:
+    downloads:
+      timeout: 4m
+      attempts: 5
+      cooldown: 10s
+
+caching:
+  minTime: 5m
+  maxTime: 30m
+  prefetching: true
+
+customDNS:
+  customTTL: 1h
+  filterUnmappedTypes: true
+  mapping:
+    edge.coia.io: 100.65.133.108
+    home.coia.io: 100.65.133.108
+    cam.coia.io: 100.65.133.108
+
+ports:
+  dns: 53
+
+log:
+  level: warn
+  format: text
+  timestamp: false
+  privacy: true
