@@ -43,6 +43,9 @@ customDNS:
   customTTL: 1h
   filterUnmappedTypes: true
   mapping:
+    edge.coia.io: 192.168.1.84
+    home.coia.io: 192.168.1.84
+    cam.coia.io: 192.168.1.84
     nvr.coia.io: 192.168.6.87
     scrypted.coia.io: 192.168.6.87
     ha.internal.coia.io: 192.168.1.228
