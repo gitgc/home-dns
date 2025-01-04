@@ -46,6 +46,7 @@ customDNS:
     edge.coia.io: 192.168.1.84
     home.coia.io: 192.168.1.84
     cam.coia.io: 192.168.1.84
+    music.coia.io: 192.168.1.84
     uptime.coia.io: 192.168.1.84
     network.coia.io: 192.168.1.84
     nvr.coia.io: 192.168.6.87

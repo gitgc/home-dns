@@ -46,6 +46,7 @@ customDNS:
     edge.coia.io: 100.65.133.108
     home.coia.io: 100.65.133.108
     cam.coia.io: 100.65.133.108
+    music.coia.io: 100.65.133.108
 
 ports:
   dns: 53
