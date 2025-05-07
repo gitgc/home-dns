@@ -4,8 +4,9 @@ upstreams:
   timeout: 10s
   groups:
     default:
-      - 192.168.1.4:5354
-
+     # - 192.168.1.4:5354
+       - https://1.1.1.1/dns-query
+       - https://1.0.0.1/dns-query
 bootstrapDns:
   - upstream: tcp+udp:8.8.8.8
 
@@ -49,8 +50,8 @@ customDNS:
     music.coia.io: 192.168.1.84
     uptime.coia.io: 192.168.1.84
     network.coia.io: 192.168.1.84
-    nvr.coia.io: 192.168.6.87
-    scrypted.coia.io: 192.168.6.87
+    nvr.coia.io: 192.168.1.86
+    scrypted.coia.io: 192.168.1.86
     ha.internal.coia.io: 192.168.1.228
     seattle.coia.io: 192.168.1.222
     unifi.coia.io: 192.168.1.1
