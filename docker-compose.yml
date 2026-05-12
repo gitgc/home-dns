@@ -16,7 +16,7 @@ services:
         start_period: 60s
 
   blocky:
-    image: spx01/blocky:v0.24
+    image: spx01/blocky:v0.29.0
     container_name: dns-blocky
     environment:
       - TZ=America/Los_Angeles
