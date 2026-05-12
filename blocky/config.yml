@@ -5,8 +5,9 @@ upstreams:
   groups:
     default:
      # - 192.168.1.4:5354
-       - https://1.1.1.1/dns-query
-       - https://1.0.0.1/dns-query
+      - https://1.1.1.1/dns-query
+      - https://1.0.0.1/dns-query
+     #   - tcp+udp:8.8.8.8
 bootstrapDns:
   - upstream: tcp+udp:8.8.8.8
 
@@ -58,8 +59,11 @@ customDNS:
     dns1.coia.io: 192.168.1.4
     dns2.coia.io: 192.168.1.170
     cam.garden.coia.io: 192.168.3.179
-    cam-exterior.workshop.coia.io: 192.168.3.9
+    cam-exterior.workshop.coia.io: 192.168.1.223
     cam-exterior.garage.coia.io: 192.168.3.7
+    cam.entrance.coia.io: 192.168.3.87
+    cam-drive.workshop.coia.io: 192.168.1.247
+    cam.doorbell.coia.io: 192.168.3.71
 #conditional:
 #  fallbackUpstream: false
 #  mapping:
