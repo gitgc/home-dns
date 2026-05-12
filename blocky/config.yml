@@ -4,9 +4,10 @@ upstreams:
   timeout: 10s
   groups:
     default:
-     # - 192.168.1.4:5354
-      - https://1.1.1.1/dns-query
-      - https://1.0.0.1/dns-query
+      - 192.168.1.4:5354
+      - 192.168.1.170:5354
+     # - https://1.1.1.1/dns-query
+     # - https://1.0.0.1/dns-query
      #   - tcp+udp:8.8.8.8
 bootstrapDns:
   - upstream: tcp+udp:8.8.8.8
