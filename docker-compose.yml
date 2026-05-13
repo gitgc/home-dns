@@ -1,19 +1,23 @@
 services:
   unbound:
-      image: pedantic/unbound:latest
-      container_name: dns-unbound
-      ports:
+    image: alpinelinux/unbound:latest
+    container_name: dns-unbound
+    ports:
       - 5354:5353/udp
       - 5354:5353/tcp
-      volumes:
-        - ./unbound/unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro
-      restart: always
-      healthcheck:
-        test: drill cloudflare.com || exit 1
-        interval: 30s
-        timeout: 5s
-        retries: 3
-        start_period: 60s
+    volumes:
+      - ./unbound/unbound.conf:/etc/unbound/unbound.conf:ro
+    restart: always
+    logging:
+      driver: none
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    labels:
+      autoheal-app: true
 
   blocky:
     image: spx01/blocky:v0.29.0
@@ -30,4 +34,17 @@ services:
       unbound:
         condition: service_healthy
     restart: always
+    logging:
+      driver: none
+    labels:
+      autoheal-app: true
 
+  autoheal:
+    image: willfarrell/autoheal:latest
+    network_mode: none
+    restart: unless-stopped
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal-app
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
