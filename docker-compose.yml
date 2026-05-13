@@ -1,3 +1,9 @@
+x-health-check-defaults: &health_check_defaults
+  interval: 30s
+  timeout: 10s
+  retries: 5
+  start_period: 60s
+
 services:
   unbound:
     image: alpinelinux/unbound:latest
@@ -12,11 +18,8 @@ services:
     logging:
       driver: none
     healthcheck:
+      <<: *health_check_defaults
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 60s
     labels:
       autoheal-app: true
 
@@ -37,6 +40,9 @@ services:
     restart: always
     logging:
       driver: none
+    healthcheck:
+      <<: *health_check_defaults
+      test: ["CMD", "/app/blocky", "healthcheck"]
     labels:
       autoheal-app: true
 
