@@ -9,8 +9,8 @@ services:
       - ./unbound/unbound.conf:/etc/unbound/unbound.conf:ro
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
     restart: always
-    #logging:
-    #  driver: none
+    logging:
+      driver: none
     healthcheck:
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
       interval: 30s
