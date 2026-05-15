@@ -65,6 +65,7 @@ customDNS:
     cam.entrance.coia.io: 192.168.3.87
     cam-drive.workshop.coia.io: 192.168.1.247
     cam.doorbell.coia.io: 192.168.3.71
+    plex.coia.io: 192.168.6.48
 #conditional:
 #  fallbackUpstream: false
 #  mapping:
