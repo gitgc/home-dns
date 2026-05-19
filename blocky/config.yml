@@ -25,12 +25,20 @@ blocking:
   denylists:
     ads:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    adult:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-only/hosts
   allowlists:
     ads:
       - google-ads-whitelist.txt
   clientGroupsBlock:
     default:
       - ads
+    192.168.5.0/24:
+      - ads
+      - adult
+    192.168.2.0/24:
+      - ads
+      - adult
   loading:
     downloads:
       timeout: 4m
@@ -88,6 +96,6 @@ ports:
 
 log:
   level: warn
-  format: text
-  timestamp: false
+  format: json
+  timestamp: true
   privacy: true
