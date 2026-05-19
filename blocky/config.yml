@@ -58,7 +58,9 @@ customDNS:
     seattle.coia.io: 192.168.1.222
     unifi.coia.io: 192.168.1.1
     dns1.coia.io: 192.168.1.4
+    ntp1.coia.io: 192.168.1.4
     dns2.coia.io: 192.168.1.170
+    ntp2.coia.io: 192.168.1.170
     cam.garden.coia.io: 192.168.3.179
     cam-exterior.workshop.coia.io: 192.168.1.223
     cam-exterior.garage.coia.io: 192.168.3.7
