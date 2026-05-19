@@ -39,6 +39,9 @@ blocking:
     192.168.2.0/24:
       - ads
       - adult
+    192.168.3.0/24:
+      - ads
+      - adult
   loading:
     downloads:
       timeout: 4m
@@ -78,9 +81,10 @@ customDNS:
     plex.coia.io: 192.168.1.84
     netdata.edge.coia.io: 192.168.1.84
     netdata.nvr.coia.io: 192.168.1.86
-#conditional:
-#  fallbackUpstream: false
-#  mapping:
+conditional:
+  fallbackUpstream: false
+  mapping:
+    coia.io:
    # for reverse DNS lookups of local devices
 #    1.168.192.in-addr.arpa: 192.168.1.1
     # for all unqualified hostnames
