@@ -4,8 +4,8 @@ upstreams:
   timeout: 10s
   groups:
     default:
-      - 8.8.8.8:53
-
+      - tcp+udp:192.168.1.4:5354
+      - tcp+udp:192.168.1.170:5354
 bootstrapDns:
   - upstream: tcp+udp:8.8.8.8
 
@@ -22,6 +22,8 @@ blocking:
   denylists:
     ads:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+    adult:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-only/hosts
   allowlists:
     ads:
       - google-ads-whitelist.txt
@@ -47,12 +49,16 @@ customDNS:
     home.coia.io: 100.65.133.108
     cam.coia.io: 100.65.133.108
     music.coia.io: 100.65.133.108
-
+    uptime.coia.io: 100.65.133.108
+    network.coia.io: 100.65.133.108
+    scrypted.coia.io: 100.65.133.108
+    plex.coia.io: 100.65.133.108
+    netdata.edge.coia.io: 100.65.133.108
 ports:
   dns: 53
 
 log:
   level: warn
-  format: text
-  timestamp: false
+  format: json
+  timestamp: true
   privacy: true
