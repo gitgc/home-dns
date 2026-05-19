@@ -81,10 +81,10 @@ customDNS:
     plex.coia.io: 192.168.1.84
     netdata.edge.coia.io: 192.168.1.84
     netdata.nvr.coia.io: 192.168.1.86
-conditional:
-  fallbackUpstream: false
-  mapping:
-    coia.io:
+#conditional:
+#  fallbackUpstream: false
+#  mapping:
+#    coia.io:
    # for reverse DNS lookups of local devices
 #    1.168.192.in-addr.arpa: 192.168.1.1
     # for all unqualified hostnames
