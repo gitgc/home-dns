@@ -1,0 +1,10 @@
+{
+	email {env.CADDY_DNS_EMAIL}
+	acme_dns cloudflare {env.CF_AUTH_TOKEN}
+}
+
+{$CADDY_SUBDOMAIN}.{$CADDY_DOMAIN} {
+	encode gzip
+
+	reverse_proxy host.docker.internal:19999
+}

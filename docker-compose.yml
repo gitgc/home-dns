@@ -1,3 +1,10 @@
+x-default-logging: &default_logging
+  #driver: "none"
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 x-health-check-defaults: &health_check_defaults
   interval: 30s
   timeout: 10s
@@ -16,7 +23,7 @@ services:
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
     restart: always
     logging:
-      driver: none
+      <<: *default_logging
     healthcheck:
       <<: *health_check_defaults
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
@@ -39,10 +46,78 @@ services:
         condition: service_healthy
     restart: always
     logging:
-      driver: none
+      <<: *default_logging
     healthcheck:
       <<: *health_check_defaults
       test: ["CMD", "/app/blocky", "healthcheck"]
+    labels:
+      autoheal-app: true
+
+  netdata:
+    image: netdata/netdata
+    container_name: dns-netdata
+    pid: host
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - NETDATA_CLAIM_TOKEN
+      - NETDATA_CLAIM_URL
+      - NETDATA_CLAIM_ROOMS
+      - DISABLE_TELEMETRY=1
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - ./netdata/config:/etc/netdata
+      - ./netdata/lib:/var/lib/netdata
+      - /:/host/root:ro,rslave
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    tmpfs:
+      - /var/cache/netdata:size=512m
+    logging:
+      <<: *default_logging
+    healthcheck:
+      <<: *health_check_defaults
+      test: [ "CMD", "curl", "-f", "http://localhost:19999/api/v1/info" ]
+    labels:
+      autoheal-app: true
+
+  caddy:
+    image: ghcr.io/gitgc/home-proxy-webserver:main
+    container_name: dns-caddy
+    restart: unless-stopped
+    init: true
+    ports:
+      - 80:80
+      - 443:443/tcp
+      - 443:443/udp
+    environment:
+      - CADDY_DNS_EMAIL
+      - CADDY_SUBDOMAIN
+      - CADDY_DOMAIN
+      - CF_AUTH_TOKEN
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "./caddy/data/:/data/"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      netdata:
+        condition: service_healthy
+    logging:
+      <<: *default_logging
+    healthcheck:
+      <<: *health_check_defaults
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$CADDY_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
     labels:
       autoheal-app: true
 
@@ -50,8 +125,11 @@ services:
     image: willfarrell/autoheal:latest
     network_mode: none
     restart: unless-stopped
+    container_name: dns-autoheal
     environment:
       AUTOHEAL_CONTAINER_LABEL: autoheal-app
+    logging:
+      <<: *default_logging
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
