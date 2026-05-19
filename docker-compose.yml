@@ -28,6 +28,11 @@ services:
       - TZ=America/Los_Angeles
       - NOCLIENTLOG=true
       - ENABLE_NTS=true
+    logging:
+      <<: *default_logging
+    healthcheck:
+      <<: *health_check_defaults
+      test: [ "CMD", "chronyc", "-n", "tracking", "||", "exit", "1" ]
     labels:
       autoheal-app: true
 
