@@ -78,7 +78,7 @@ customDNS:
     plex.coia.io: 192.168.1.84
     netdata.edge.coia.io: 192.168.1.84
     netdata.nvr.coia.io: 192.168.1.86
-    netdata.race.coia.io: 192.168.6.48
+    netdata.race.coia.io: 192.168.6.109
     giomac.coia.io: 192.168.6.48
 
 clientLookup:
