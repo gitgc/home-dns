@@ -3,10 +3,14 @@
 	acme_dns cloudflare {env.CF_AUTH_TOKEN}
 }
 
-{$CADDY_SUBDOMAIN}.{$CADDY_DOMAIN} {
+{$NETDATA_SUBDOMAIN}.{$CADDY_DOMAIN} {
 	encode gzip
 
 	respond /caddy-health-check 200
 
 	reverse_proxy host.docker.internal:19999
+}
+
+{$DOH_SUBDOMAIN}.{$CADDY_DOMAIN} {
+	reverse_proxy /dns-query blocky:4000
 }

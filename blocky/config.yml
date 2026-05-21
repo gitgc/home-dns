@@ -86,6 +86,8 @@ clientLookup:
 
 ports:
   dns: 53
+  http: 4000
+  dohPath: /dns-query
 
 log:
   level: warn
