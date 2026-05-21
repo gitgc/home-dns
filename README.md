@@ -11,11 +11,13 @@ flowchart LR
     Unbound[Unbound]
     Caddy[Caddy]
     CertSync[cert-sync]
+    NTP[NTP]
     Auth([Authoritative<br>Name Servers])
     LE["Let's Encrypt<br>Cloudflare DNS-01"]
 
     Client -->|":53 DNS<br>:853 DoT"| Blocky
     Client -->|":443 DoH"| Caddy
+    Client -->|":123 NTP"| NTP
     Caddy -->|"/dns-query"| Blocky
     Blocky --> Unbound --> Auth
     LE -->|"TLS cert"| Caddy
