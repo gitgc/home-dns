@@ -1,5 +1,4 @@
 x-default-logging: &default_logging
-  #driver: "none"
   driver: "json-file"
   options:
     max-size: "10m"
@@ -47,12 +46,69 @@ services:
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
     restart: always
     logging:
-      <<: *default_logging
+      driver: none
     healthcheck:
       <<: *health_check_defaults
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
     labels:
       autoheal-app: true
+
+  caddy:
+    image: ghcr.io/gitgc/home-proxy-webserver:main
+    container_name: dns-caddy
+    restart: unless-stopped
+    init: true
+    ports:
+      - 80:80
+      - 443:443/tcp
+      - 443:443/udp
+    environment:
+      - TZ=America/Los_Angeles
+      - CADDY_DNS_EMAIL
+      - NETDATA_SUBDOMAIN
+      - CADDY_DOMAIN
+      - CF_AUTH_TOKEN
+      - DOH_SUBDOMAIN
+    volumes:
+      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "./caddy/data/:/data/"
+      - "/etc/localtime:/etc/localtime:ro"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      netdata:
+        condition: service_healthy
+    logging:
+      <<: *default_logging
+    healthcheck:
+      <<: *health_check_defaults
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$DOH_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
+    labels:
+      autoheal-app: true
+
+  cert-sync:
+    image: alpine:latest
+    container_name: dns-cert-sync
+    restart: unless-stopped
+    environment:
+      - DOH_SUBDOMAIN
+      - CADDY_DOMAIN
+    volumes:
+      - TZ=America/Los_Angeles
+      - "./caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/:/caddy-certs/:ro"
+      - "blocky-certs:/blocky-certs/"
+      - "./cert-sync/sync.sh:/sync.sh:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/localtime:/etc/localtime:ro"
+    entrypoint: ["sh", "/sync.sh"]
+    depends_on:
+      caddy:
+        condition: service_healthy
+    logging:
+      <<: *default_logging
+    healthcheck:
+      <<: *health_check_defaults
+      test: ["CMD", "test", "-f", "/blocky-certs/server.crt"]
 
   blocky:
     image: spx01/blocky:v0.29.0
@@ -62,11 +118,18 @@ services:
     ports:
       - 53:53/udp
       - 53:53/tcp
+      - 853:853/tcp
     volumes:
       - ./blocky/config.yml:/app/config.yml:ro
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
+      - "blocky-certs:/certs:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     depends_on:
       unbound:
+        condition: service_healthy
+      caddy:
+        condition: service_healthy
+      cert-sync:
         condition: service_healthy
     restart: always
     logging:
@@ -112,37 +175,6 @@ services:
     healthcheck:
       <<: *health_check_defaults
       test: [ "CMD", "curl", "-f", "http://localhost:19999/api/v1/info" ]
-    labels:
-      autoheal-app: true
-
-  caddy:
-    image: ghcr.io/gitgc/home-proxy-webserver:main
-    container_name: dns-caddy
-    restart: unless-stopped
-    init: true
-    ports:
-      - 80:80
-      - 443:443/tcp
-      - 443:443/udp
-    environment:
-      - CADDY_DNS_EMAIL
-      - NETDATA_SUBDOMAIN
-      - CADDY_DOMAIN
-      - CF_AUTH_TOKEN
-      - DOH_SUBDOMAIN
-    volumes:
-      - "./Caddyfile:/etc/caddy/Caddyfile:ro"
-      - "./caddy/data/:/data/"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    depends_on:
-      netdata:
-        condition: service_healthy
-    logging:
-      <<: *default_logging
-    healthcheck:
-      <<: *health_check_defaults
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$DOH_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
     labels:
       autoheal-app: true
 
