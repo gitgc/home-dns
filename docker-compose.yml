@@ -114,7 +114,7 @@ services:
       test: ["CMD", "test", "-f", "/blocky-certs/server.crt"]
 
   blocky:
-    image: spx01/blocky:v0.29.0
+    image: spx01/blocky:v0.30.0
     container_name: dns-blocky
     environment:
       - TZ=America/Los_Angeles
