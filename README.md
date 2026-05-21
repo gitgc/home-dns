@@ -2,16 +2,6 @@
 
 My home DNS and NTP server configuration. The Blocky project provides internal DNS services, encrypted DNS and custom host names and ad-blocking capabilities. Unbound provides the upstream DNS resolution, and is configured for either forwarding or recursive resolution. Caddy provides DNS/DoH/DoT support, allowing encrypted DNS within the LAN. This allows me to do things like split-DNS, multiple hostnames for same IP address, ad-blocking and adult content filtering, while having full control of how names resolve within my network and to the outside world with end to end encrypted DNS.
 
-## DNS Privacy Decisions
-
-There is a ton of debate on how to best secure DNS privacy, and I have tried to strike a balance between security and ease of use. This project provides an internal name server with support for traditional DNS (port `53`), DoT (port `853`) and DoH (port `443`), ensuring clients can prefer the most secure option they support. The internal name server can be configured to run as a recursive resolver or forward to upstream DoT providers, and I have chosen the latter for the reasons outlined below.
-
-By default, the DNS server is configured to round-robin a selection of upstream DoT providers to spread the load, improve reliability as well as some privacy benefits. I've personally decided running as a recursive resolver is not worth the trade-offs as this causes a plaintext DNS query to be sent to the root nameservers, which is a privacy concern. Spreading across multiple DoT providers keeps the DNS encrypted while still providing some of the benefits of a recursive resolver, such as improved performance and reliability. The DNS cache is far more likely to be warm at a major DoT provider than your private unbound instance, which can also improve performance and means lots of queries won't even need to reach the root nameservers. Spreading across multiple backends means no one DNS provider gets the complete picture of your encrypted DNS queries, which is the crux of my argument over using a plain-text recursive resolver against root servers, where the ISP/anyone in the middle can read all your DNS queries.
-
-### DNS-over-TLS vs DNS-over-HTTPS
-
-There is further argument still between whether one should use DoT or DNS-over-HTTPS (DoH) for encrypted DNS. I have chosen to support both internally, but for upstreams I am only using DoT. The theoretical benefit of DoH is that it can be more difficult to block or throttle than DoT, as it uses the same port and protocol as regular HTTPS traffic. This is not a concern with my ISP, who will not block DoT on port `853`. If this was a concern, I would consider switching to DoH for upstream queries as well. If you have no concerns about DoT being blocked, then it is arguably simpler to use DoT for upstream queries as it is a slightly less complex protocol (DoH is essentially just a DoT query wrapped in an HTTPS RESTful-style API request, so has marginally more overhead. Both still use TLS for encryption).
-
 ## Architecture
 
 ```mermaid
@@ -34,6 +24,16 @@ flowchart LR
     Caddy -->|"cert file"| CertSync
     CertSync -->|"syncs TLS cert"| Blocky
 ```
+
+## DNS Privacy Decisions
+
+There is a ton of debate on how to best secure DNS privacy, and I have tried to strike a balance between security and ease of use. This project provides an internal name server with support for traditional DNS (port `53`), DoT (port `853`) and DoH (port `443`), ensuring clients can prefer the most secure option they support. The internal name server can be configured to run as a recursive resolver or forward to upstream DoT providers, and I have chosen the latter for the reasons outlined below.
+
+By default, the DNS server is configured to round-robin a selection of upstream DoT providers to spread the load, improve reliability as well as some privacy benefits. I've personally decided running as a recursive resolver is not worth the trade-offs as this causes a plaintext DNS query to be sent to the root nameservers, which is a privacy concern. Spreading across multiple DoT providers keeps the DNS encrypted while still providing some of the benefits of a recursive resolver, such as improved performance and reliability. The DNS cache is far more likely to be warm at a major DoT provider than your private unbound instance, which can also improve performance and means lots of queries won't even need to reach the root nameservers. Spreading across multiple backends means no one DNS provider gets the complete picture of your encrypted DNS queries, which is the crux of my argument over using a plain-text recursive resolver against root servers, where the ISP/anyone in the middle can read all your DNS queries.
+
+### DNS-over-TLS vs DNS-over-HTTPS
+
+There is further argument still between whether one should use DoT or DNS-over-HTTPS (DoH) for encrypted DNS. I have chosen to support both internally, but for upstreams I am only using DoT. The theoretical benefit of DoH is that it can be more difficult to block or throttle than DoT, as it uses the same port and protocol as regular HTTPS traffic. This is not a concern with my ISP, who will not block DoT on port `853`. If this was a concern, I would consider switching to DoH for upstream queries as well. If you have no concerns about DoT being blocked, then it is arguably simpler to use DoT for upstream queries as it is a slightly less complex protocol (DoH is essentially just a DoT query wrapped in an HTTPS RESTful-style API request, so has marginally more overhead. Both still use TLS for encryption).
 
 ## Setup
 
