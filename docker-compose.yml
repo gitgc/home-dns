@@ -57,22 +57,16 @@ services:
   blocky:
     image: spx01/blocky:v0.29.0
     container_name: dns-blocky
-    user: root
     environment:
       - TZ=America/Los_Angeles
     ports:
       - 53:53/udp
       - 53:53/tcp
-      - 853:853/tcp
     volumes:
       - ./blocky/config.yml:/app/config.yml:ro
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
-      - "./caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/${DOH_SUBDOMAIN}.${CADDY_DOMAIN}/${DOH_SUBDOMAIN}.${CADDY_DOMAIN}.crt:/certs/server.crt:ro"
-      - "./caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/${DOH_SUBDOMAIN}.${CADDY_DOMAIN}/${DOH_SUBDOMAIN}.${CADDY_DOMAIN}.key:/certs/server.key:ro"
     depends_on:
       unbound:
-        condition: service_healthy
-      caddy:
         condition: service_healthy
     restart: always
     logging:

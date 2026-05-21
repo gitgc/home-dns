@@ -86,12 +86,8 @@ customDNS:
 clientLookup:
   upstream: 192.168.1.1
 
-certFile: /certs/server.crt
-keyFile: /certs/server.key
-
 ports:
   dns: 53
-  tls: 853
   http: 4000
   dohPath: /dns-query
 
