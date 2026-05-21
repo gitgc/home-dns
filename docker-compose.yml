@@ -50,8 +50,8 @@ services:
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
       - /etc/localtime:/etc/localtime:ro
     restart: always
-#    logging:
-#      driver: none
+    logging:
+      <<: *default_logging
     healthcheck:
       <<: *health_check_defaults
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
