@@ -142,7 +142,7 @@ services:
       <<: *default_logging
     healthcheck:
       <<: *health_check_defaults
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$CADDY_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$DOH_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
     labels:
       autoheal-app: true
 

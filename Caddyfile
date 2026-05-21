@@ -6,11 +6,10 @@
 {$NETDATA_SUBDOMAIN}.{$CADDY_DOMAIN} {
 	encode gzip
 
-	respond /caddy-health-check 200
-
 	reverse_proxy host.docker.internal:19999
 }
 
 {$DOH_SUBDOMAIN}.{$CADDY_DOMAIN} {
+	respond /caddy-health-check 200
 	reverse_proxy /dns-query blocky:4000
 }
