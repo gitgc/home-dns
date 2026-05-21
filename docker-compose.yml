@@ -38,12 +38,15 @@ services:
   unbound:
     image: alpinelinux/unbound:latest
     container_name: dns-unbound
+    environment:
+      - TZ=America/Los_Angeles
     ports:
       - 5354:5353/udp
       - 5354:5353/tcp
     volumes:
       - ./unbound/unbound.conf:/etc/unbound/unbound.conf:ro
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: always
     logging:
       driver: none
@@ -93,8 +96,8 @@ services:
     environment:
       - DOH_SUBDOMAIN
       - CADDY_DOMAIN
-    volumes:
       - TZ=America/Los_Angeles
+    volumes:
       - "./caddy/data/caddy/certificates/acme-v02.api.letsencrypt.org-directory/:/caddy-certs/:ro"
       - "blocky-certs:/blocky-certs/"
       - "./cert-sync/sync.sh:/sync.sh:ro"
@@ -190,3 +193,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  blocky-certs:
