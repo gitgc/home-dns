@@ -10,7 +10,7 @@ By default, the DNS server is configured to round-robin a selection of upstream 
 
 ### DNS-over-TLS vs DNS-over-HTTPS
 
-There is further argument still between whether one should use DoT or DNS-over-HTTPS (DoH) for encrypted DNS. I have chosen to support both internally, but for upstreams I am only using DoT. The theoretical benefit of DoH is that it can be more difficult to block or throttle than DoT, as it uses the same port and protocol as regular HTTPS traffic. This is not a concern with my ISP, who will not block DoT on port `853`. If this was a concern, I would consider switching to DoH for upstream queries as well.
+There is further argument still between whether one should use DoT or DNS-over-HTTPS (DoH) for encrypted DNS. I have chosen to support both internally, but for upstreams I am only using DoT. The theoretical benefit of DoH is that it can be more difficult to block or throttle than DoT, as it uses the same port and protocol as regular HTTPS traffic. This is not a concern with my ISP, who will not block DoT on port `853`. If this was a concern, I would consider switching to DoH for upstream queries as well. If you have no concerns about DoT being blocked, then it is arguably simpler to use DoT for upstream queries as it is a slightly less complex protocol (DoH is essentially just a DoT query wrapped in an HTTPS RESTful-style API request, so has marginally more overhead. Both still use TLS for encryption).
 
 ## Architecture
 
