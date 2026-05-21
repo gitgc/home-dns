@@ -45,6 +45,7 @@ services:
       - 5354:5353/tcp
     volumes:
       - ./unbound/unbound-dot-servers.conf:/etc/unbound/unbound.conf:ro
+      - ./unbound/dot-forward-zone.conf:/etc/unbound/dot-forward-zone.conf:ro
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
       - /etc/localtime:/etc/localtime:ro
     restart: always
