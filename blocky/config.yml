@@ -53,39 +53,6 @@ caching:
   maxTime: 30m
   prefetching: true
 
-customDNS:
-  customTTL: 1h
-  filterUnmappedTypes: true
-  mapping:
-    edge.coia.io: 192.168.1.84
-    home.coia.io: 192.168.1.84
-    cam.coia.io: 192.168.1.84
-    music.coia.io: 192.168.1.84
-    uptime.coia.io: 192.168.1.84
-    network.coia.io: 192.168.1.84
-    nvr.coia.io: 192.168.1.86
-    scrypted.coia.io: 192.168.1.86
-    ha.internal.coia.io: 192.168.1.228
-    seattle.coia.io: 192.168.1.222
-    unifi.coia.io: 192.168.1.1
-    dns1.coia.io: 192.168.1.4
-    netdata.dns1.coia.io: 192.168.1.4
-    ntp1.coia.io: 192.168.1.4
-    dns2.coia.io: 192.168.1.170
-    netdata.dns2.coia.io: 192.168.1.170
-    ntp2.coia.io: 192.168.1.170
-    cam.garden.coia.io: 192.168.3.179
-    cam-exterior.workshop.coia.io: 192.168.1.223
-    cam-exterior.garage.coia.io: 192.168.3.7
-    cam.entrance.coia.io: 192.168.3.87
-    cam-drive.workshop.coia.io: 192.168.1.247
-    cam.doorbell.coia.io: 192.168.3.71
-    plex.coia.io: 192.168.1.84
-    netdata.edge.coia.io: 192.168.1.84
-    netdata.nvr.coia.io: 192.168.1.86
-    netdata.race.coia.io: 192.168.6.109
-    giomac.coia.io: 192.168.6.48
-
 clientLookup:
   upstream: 192.168.1.1
 
