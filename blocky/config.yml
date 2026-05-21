@@ -4,10 +4,16 @@ upstreams:
   timeout: 10s
   groups:
     default:
-      - tcp+udp:192.168.1.4:5354
-      - tcp+udp:192.168.1.170:5354
+      - tcp-tls:dns.google:853
+      - tcp-tls:dns.quad9.net:853
+      - tcp-tls:unfiltered.adguard-dns.com:853
+      - tcp-tls:1.1.1.1:853
+      - tcp-tls:dns.nextdns.io:853
 bootstrapDns:
-  - upstream: tcp+udp:8.8.8.8
+  - upstream: tcp-tls:dns.google:853
+    ips:
+      - 8.8.8.8
+      - 8.8.4.4
 
 connectIPVersion: v4
 
