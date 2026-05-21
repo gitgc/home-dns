@@ -44,12 +44,12 @@ services:
       - 5354:5353/udp
       - 5354:5353/tcp
     volumes:
-      - ./unbound/unbound.conf:/etc/unbound/unbound.conf:ro
+      - ./unbound/unbound-dot-servers.conf:/etc/unbound/unbound.conf:ro
       - ./unbound/named.cache:/etc/unbound/root.hints:ro
       - /etc/localtime:/etc/localtime:ro
     restart: always
-    logging:
-      driver: none
+#    logging:
+#      driver: none
     healthcheck:
       <<: *health_check_defaults
       test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
@@ -123,7 +123,7 @@ services:
       - 53:53/tcp
       - 853:853/tcp
     volumes:
-      - ./blocky/config.yml:/app/config.yml:ro
+      - ./blocky/config-local-unbound.yml:/app/config.yml:ro
       - ./blocky/google-ads-whitelist.txt:/app/google-ads-whitelist.txt:ro
       - "blocky-certs:/certs:ro"
       - "/etc/localtime:/etc/localtime:ro"
