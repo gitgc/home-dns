@@ -1,3 +1,11 @@
+connectIPVersion: v4
+
+bootstrapDns:
+  - upstream: tcp-tls:dns.google:853
+    ips:
+      - 8.8.8.8
+      - 8.8.4.4
+
 upstreams:
   init:
     strategy: fast
@@ -6,13 +14,6 @@ upstreams:
     default:
       - tcp+udp:192.168.1.4:5354
       - tcp+udp:192.168.1.170:5354
-bootstrapDns:
-  - upstream: tcp-tls:dns.google:853
-    ips:
-      - 8.8.8.8
-      - 8.8.4.4
-
-connectIPVersion: v4
 
 filtering:
   queryTypes:
@@ -54,7 +55,7 @@ caching:
   prefetching: true
 
 clientLookup:
-  upstream: 192.168.1.1
+  upstream: 192.168.1.4
 
 certFile: /certs/server.crt
 keyFile: /certs/server.key
