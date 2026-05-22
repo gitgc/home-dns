@@ -1,8 +1,8 @@
 x-default-logging: &default_logging
-  driver: "json-file"
-  options:
-    max-size: "10m"
-    max-file: "3"
+  driver: "none"
+#  options:
+#    max-size: "10m"
+#    max-file: "3"
 
 x-health-check-defaults: &health_check_defaults
   interval: 30s
