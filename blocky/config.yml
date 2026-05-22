@@ -36,16 +36,17 @@ blocking:
   clientGroupsBlock:
     default:
       - ads
-      - DoH
     192.168.5.0/24:
       - ads
       - adult
     192.168.2.0/24:
       - ads
       - adult
+      - DoH
     192.168.3.0/24:
       - ads
       - adult
+      - DoH
   loading:
     downloads:
       timeout: 4m
