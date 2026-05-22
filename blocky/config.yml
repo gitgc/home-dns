@@ -28,12 +28,15 @@ blocking:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
     adult:
       - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews-gambling-porn-only/hosts
+    DoH:
+      - https://raw.githubusercontent.com/dibdot/DoH-IP-blocklists/refs/heads/master/doh-domains.txt
   allowlists:
     ads:
       - google-ads-whitelist.txt
   clientGroupsBlock:
     default:
       - ads
+      - DoH
     192.168.5.0/24:
       - ads
       - adult
