@@ -10,6 +10,9 @@
 }
 
 {$DOH_SUBDOMAIN}.{$CADDY_DOMAIN} {
-	respond /caddy-health-check 200
 	reverse_proxy /dns-query blocky:4000
+}
+
+http://localhost:80 {
+	respond /caddy-health-check 200
 }

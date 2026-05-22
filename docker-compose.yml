@@ -80,14 +80,11 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     extra_hosts:
       - "host.docker.internal:host-gateway"
-#    depends_on:
-#      netdata:
-#        condition: service_healthy
     logging:
       <<: *default_logging
-#    healthcheck:
-#      <<: *health_check_defaults
-#      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://$DOH_SUBDOMAIN.$CADDY_DOMAIN/caddy-health-check" ]
+    healthcheck:
+      <<: *health_check_defaults
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/caddy-health-check" ]
     labels:
       autoheal-app: true
 
@@ -106,9 +103,9 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/localtime:/etc/localtime:ro"
     entrypoint: ["sh", "/sync.sh"]
-#    depends_on:
-#      caddy:
-#        condition: service_healthy
+    depends_on:
+      caddy:
+        condition: service_healthy
     logging:
       <<: *default_logging
     healthcheck:
@@ -132,8 +129,8 @@ services:
     depends_on:
       unbound:
         condition: service_healthy
-#      caddy:
-#        condition: service_healthy
+      caddy:
+        condition: service_healthy
       cert-sync:
         condition: service_healthy
     restart: always
