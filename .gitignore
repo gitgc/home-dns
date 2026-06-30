@@ -1,4 +1,6 @@
 *.key
 *.env
 netdata/
+caddy/
+.DS_Store
 

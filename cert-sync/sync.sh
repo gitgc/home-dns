@@ -10,7 +10,7 @@ KEY_SRC="/caddy-certs/${DOMAIN}/${DOMAIN}.key"
 sync_certs() {
     if [ -f "$CERT_SRC" ]; then
         install -m 644 "$CERT_SRC" /blocky-certs/server.crt
-        install -m 644 "$KEY_SRC"  /blocky-certs/server.key
+        install -m 640 "$KEY_SRC"  /blocky-certs/server.key
         echo "synced certs for ${DOMAIN}"
     else
         echo "cert not yet available at ${CERT_SRC}"
