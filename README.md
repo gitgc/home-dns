@@ -67,22 +67,22 @@ This runs on a Raspberry Pi, so logging is kept minimal and in RAM:
 - Services log at warning level or above, and Blocky's query log is disabled.
 - Healthchecks probe every 60s once a container is healthy. Docker writes health state to disk on every probe.
 
-Install the journald drop-in on the host:
+Run the host setup script on each Pi (idempotent; restarts Docker the first time, and `config.txt` changes need a reboot):
 
 ```bash
-sudo mkdir -p /etc/systemd/journald.conf.d
-sudo cp host/journald.conf.d/10-volatile.conf /etc/systemd/journald.conf.d/
-sudo systemctl restart systemd-journald
-# Optional: drop the old on-disk journal
-sudo rm -rf /var/log/journal
+sudo sh host/setup.sh && sudo reboot
 ```
+
+It:
+
+- installs the volatile journald drop-in
+- on older Pi OS (bookworm), replaces the SD card swap file with zram and mounts `/tmp` as tmpfs
+- allows Unbound's port `5354` through UFW from the LAN and Docker networks, so Blocky can reach both Unbound instances
+- turns off Wi-Fi, Bluetooth, audio and camera/display auto-detect
+- enables Docker `live-restore`, so DNS keeps running while dockerd restarts or upgrades
 
 View logs with `docker logs dns-blocky` or `journalctl -t dns-blocky -f`. Netdata can also read the journal from its Logs tab.
 
-Other host tweaks worth doing on a Pi:
-
-- Mount the root filesystem with `noatime` in `/etc/fstab`.
-- Disable swap on the SD card (`sudo dphys-swapfile swapoff && sudo systemctl disable dphys-swapfile`), and use zram if you need swap.
 - Netdata's metrics DB lives on a 512MB tmpfs, so cap its retention to fit and turn off its access log in `netdata/config/netdata.conf`:
 
     ```ini
