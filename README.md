@@ -59,6 +59,16 @@ There is further argument still between whether one should use DoT or DNS-over-H
     docker compose up -d
 ```
 
+## Updating
+
+Config files are bind-mounted as single files, and `git pull` replaces them, so running containers keep the old copy until they're recreated. Plain `docker compose up -d` only recreates services whose compose definition changed, so force it:
+
+```bash
+git pull && docker compose pull && docker compose up -d --force-recreate
+```
+
+Do one server at a time so the other keeps answering DNS.
+
 ## Logging & SD card wear
 
 This runs on a Raspberry Pi, so logging is kept minimal and in RAM:
