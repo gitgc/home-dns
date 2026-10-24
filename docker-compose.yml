@@ -30,7 +30,7 @@ services:
       - /var/lib/chrony:rw,mode=1750
     environment:
       # Several NTS sources so chrony can outvote a bad one
-      - NTP_SERVERS=time.cloudflare.com,nts.netnod.se,ptbtime1.ptb.de,ntppool1.time.nl
+      - NTP_SERVERS=time.cloudflare.com,nts.netnod.se,ptbtime1.ptb.de,nts.time.nl
       - LOG_LEVEL=1
       - TZ=America/Los_Angeles
       - NOCLIENTLOG=true
