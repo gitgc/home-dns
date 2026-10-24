@@ -61,10 +61,6 @@ caching:
   maxTime: 30m
   prefetching: true
 
-clientLookup:
-  # unbound (holds the local PTR records); port 53 would be blocky itself
-  upstream: tcp+udp:192.168.1.4:5354
-
 certFile: /certs/server.crt
 keyFile: /certs/server.key
 
