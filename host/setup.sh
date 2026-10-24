@@ -21,6 +21,25 @@ if command -v ufw >/dev/null && ufw status | grep -q "Status: active"; then
     done
 fi
 
+# Older Pi OS (bookworm) swaps to a file on the SD card; use compressed RAM instead
+if systemctl is-enabled dphys-swapfile >/dev/null 2>&1; then
+    echo "== swap: replace SD card swap file with zram"
+    # Package default: zram swap sized at 50% of RAM
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -q systemd-zram-generator >/dev/null
+    dphys-swapfile swapoff
+    dphys-swapfile uninstall
+    systemctl disable --now dphys-swapfile
+    systemctl daemon-reload
+    systemctl start systemd-zram-setup@zram0.service
+fi
+
+# Trixie mounts /tmp as tmpfs by default; bookworm ships the unit but doesn't enable it
+if [ "$(findmnt -no FSTYPE /tmp)" != "tmpfs" ] && [ -f /usr/share/systemd/tmp.mount ]; then
+    echo "== /tmp: mount as tmpfs (after reboot)"
+    install -m 644 /usr/share/systemd/tmp.mount /etc/systemd/system/tmp.mount
+    systemctl enable tmp.mount
+fi
+
 echo "== bluetooth/wifi: disable (eth0 only)"
 systemctl disable --now bluetooth.service hciuart.service 2>/dev/null || true
 nmcli radio wifi off 2>/dev/null || true

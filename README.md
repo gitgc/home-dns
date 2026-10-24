@@ -76,13 +76,12 @@ sudo sh host/setup.sh && sudo reboot
 It:
 
 - installs the volatile journald drop-in
+- on older Pi OS (bookworm), replaces the SD card swap file with zram and mounts `/tmp` as tmpfs
 - allows Unbound's port `5354` through UFW from the LAN and Docker networks, so Blocky can reach both Unbound instances
 - turns off Wi-Fi, Bluetooth, audio and camera/display auto-detect
 - enables Docker `live-restore`, so DNS keeps running while dockerd restarts or upgrades
 
 View logs with `docker logs dns-blocky` or `journalctl -t dns-blocky -f`. Netdata can also read the journal from its Logs tab.
-
-Raspberry Pi OS (trixie) already mounts root with `noatime`, puts `/tmp` on tmpfs and uses zram swap. Check that older installs do the same.
 
 - Netdata's metrics DB lives on a 512MB tmpfs, so cap its retention to fit and turn off its access log in `netdata/config/netdata.conf`:
 
