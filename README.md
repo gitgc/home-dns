@@ -51,11 +51,51 @@ There is further argument still between whether one should use DoT or DNS-over-H
     # ...
     ```
 
-3. Run the following command to start the services:
+3. Configure the host to keep logs in RAM (see [Logging & SD card wear](#logging--sd-card-wear)).
+
+4. Run the following command to start the services:
 
 ```bash
-    docker-compose up -d
+    docker compose up -d
 ```
+
+## Logging & SD card wear
+
+This runs on a Raspberry Pi, so logging is kept minimal and in RAM:
+
+- Every container logs to journald via the Docker `journald` driver, and the host journal is set to volatile, so logs live in `/run/log/journal` (RAM, capped at 64MB) and are lost on reboot.
+- Services log at warning level or above, and Blocky's query log is disabled.
+- Healthchecks probe every 60s once a container is healthy. Docker writes health state to disk on every probe.
+
+Install the journald drop-in on the host:
+
+```bash
+sudo mkdir -p /etc/systemd/journald.conf.d
+sudo cp host/journald.conf.d/10-volatile.conf /etc/systemd/journald.conf.d/
+sudo systemctl restart systemd-journald
+# Optional: drop the old on-disk journal
+sudo rm -rf /var/log/journal
+```
+
+View logs with `docker logs dns-blocky` or `journalctl -t dns-blocky -f`. Netdata can also read the journal from its Logs tab.
+
+Other host tweaks worth doing on a Pi:
+
+- Mount the root filesystem with `noatime` in `/etc/fstab`.
+- Disable swap on the SD card (`sudo dphys-swapfile swapoff && sudo systemctl disable dphys-swapfile`), and use zram if you need swap.
+- Netdata's metrics DB lives on a 512MB tmpfs, so cap its retention to fit and turn off its access log in `netdata/config/netdata.conf`:
+
+    ```ini
+    [db]
+        mode = dbengine
+        dbengine tier 0 retention size = 128MiB
+        dbengine tier 1 retention size = 64MiB
+        dbengine tier 2 retention size = 32MiB
+
+    [logs]
+        level = warning
+        access = off
+    ```
 
 ## Usage
 

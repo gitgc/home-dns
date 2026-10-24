@@ -1,14 +1,21 @@
+# Container logs go to journald. With the host journal set to volatile (see
+# host/journald.conf.d), they live in RAM only and never touch the SD card.
+# View with `docker logs <name>` or `journalctl -t <name>`.
 x-default-logging: &default_logging
-  driver: "none"
-#  options:
-#    max-size: "10m"
-#    max-file: "3"
+  driver: journald
+  options:
+    tag: "{{.Name}}"
+    mode: non-blocking
+    max-buffer-size: 1m
 
 x-health-check-defaults: &health_check_defaults
-  interval: 30s
+  # Docker persists health state to disk on every probe, so keep the steady
+  # state interval long and probe quickly only while starting up.
+  interval: 60s
   timeout: 10s
-  retries: 5
+  retries: 3
   start_period: 60s
+  start_interval: 5s
 
 services:
   ntp:
@@ -23,7 +30,7 @@ services:
       - /var/lib/chrony:rw,mode=1750
     environment:
       - NTP_SERVERS=time.cloudflare.com
-      - LOG_LEVEL=0
+      - LOG_LEVEL=1
       - TZ=America/Los_Angeles
       - NOCLIENTLOG=true
       - ENABLE_NTS=true
@@ -54,7 +61,8 @@ services:
       <<: *default_logging
     healthcheck:
       <<: *health_check_defaults
-      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://cloudflare.com" ]
+      # Query unbound itself so a WAN outage doesn't trigger restarts (and wipe the cache)
+      test: [ "CMD", "nslookup", "-type=a", "localhost", "127.0.0.1:5353" ]
     labels:
       autoheal-app: true
 
@@ -89,7 +97,7 @@ services:
       autoheal-app: true
 
   cert-sync:
-    image: alpine:latest
+    image: docker:cli
     container_name: dns-cert-sync
     restart: unless-stopped
     environment:
@@ -169,6 +177,7 @@ services:
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
       - /var/log:/host/var/log:ro
+      - /run/log:/host/run/log:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     tmpfs:
       - /var/cache/netdata:size=512m

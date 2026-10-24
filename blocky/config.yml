@@ -52,6 +52,9 @@ blocking:
       timeout: 4m
       attempts: 5
       cooldown: 10s
+    # Start answering immediately and load lists in the background, so DNS
+    # isn't held up at boot if the internet (or GitHub) is slow/unreachable
+    strategy: fast
 
 caching:
   minTime: 5m
@@ -59,7 +62,8 @@ caching:
   prefetching: true
 
 clientLookup:
-  upstream: 192.168.1.4
+  # unbound (holds the local PTR records); port 53 would be blocky itself
+  upstream: tcp+udp:192.168.1.4:5354
 
 certFile: /certs/server.crt
 keyFile: /certs/server.key
@@ -75,3 +79,7 @@ log:
   format: json
   timestamp: true
   privacy: true
+
+# Defaults to console when unset; don't log individual queries
+queryLog:
+  type: none
