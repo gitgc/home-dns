@@ -14,7 +14,11 @@
 }
 
 {$DOH_SUBDOMAIN}.{$CADDY_DOMAIN} {
-	reverse_proxy /dns-query blocky:4000
+	reverse_proxy /dns-query blocky:4000 {
+		# Blocky trusts Forwarded over X-Forwarded-For; drop the client's copy
+		# so it can't spoof its IP to escape its client group's blocklists
+		header_up -Forwarded
+	}
 }
 
 http://localhost:80 {
